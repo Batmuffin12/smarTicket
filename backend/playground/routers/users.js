@@ -7,7 +7,6 @@ const {
   getSingularEntity,
   getAllEntities,
 } = require("../controllers/generic");
-const { getSingularUser } = require("../controllers/users");
 
 router.post("/users/create", async (req, res) => {
   const { status, response } = await createEntity({
@@ -28,16 +27,16 @@ router.get("/users/:id", async (req, res) => {
   const id = req.params.id;
   const { response, status } = await getSingularEntity({
     id,
-    collectionName: "Trains",
+    collectionName: "Users",
   });
   res.status(status).send(response);
 });
 
 router.patch("/users/update", async (req, res) => {
   const { status, response } = await patchEntity({
-    id: req.body.id,
+    id: req.body.data.id,
     updates: {
-      ...req.body.updates,
+      ...req.body.data.updates,
     },
     collectionName: "Users",
   });

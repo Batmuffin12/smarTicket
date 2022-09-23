@@ -24,22 +24,29 @@ router.get("/trains/:id", async (req, res) => {
 });
 
 router.post("/trains/create", async (req, res) => {
-  const { status, response } = await createTrain(req.body);
+  const { status, response } = await createEntity({
+    data: req.body.data,
+    collectionName: "Trains",
+  });
   res.status(status).send(response);
 });
 
 router.patch("/trains/update", async (req, res) => {
-  const id = req.body.id;
-  const update = {
-    ...req.body.updates,
-  };
-  const { status, response } = await patchTrain(id, update);
+  const { status, response } = await patchEntity({
+    id: req.body.data.id,
+    updates: {
+      ...req.body.data.updates,
+    },
+    collectionName: "Trains",
+  });
   res.status(status).send(response);
 });
 
 router.delete("/trains/:id", async (req, res) => {
-  const id = req.params.id;
-  const { status, response } = await deleteTrain(id);
+  const { status, response } = await deleteEntity({
+    id: require.params.id,
+    collectionName: "Trains",
+  });
   res.status(status).send(response);
 });
 
