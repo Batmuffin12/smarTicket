@@ -39,12 +39,12 @@ const getAllEntities = async ({ collectionName }) => {
 
 const getSingularEntity = async ({ id, collectionName }) => {
   try {
-    const dataRef = db.collection("Trains").doc(id);
+    const dataRef = db.collection(collectionName).doc(id);
     const response = await dataRef.get();
-    if (response.data) {
+    if (response.data()) {
       return {
         status: 200,
-        response: response.data,
+        response: response.data(),
       };
     } else {
       return {

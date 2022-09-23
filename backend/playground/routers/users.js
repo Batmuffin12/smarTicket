@@ -25,7 +25,11 @@ router.get("/users/all", async (req, res) => {
 });
 
 router.get("/users/:id", async (req, res) => {
-  const { status, response } = getSingularUser(req.params.id);
+  const id = req.params.id;
+  const { response, status } = await getSingularEntity({
+    id,
+    collectionName: "Trains",
+  });
   res.status(status).send(response);
 });
 
