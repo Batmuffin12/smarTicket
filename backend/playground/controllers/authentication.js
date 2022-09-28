@@ -1,11 +1,17 @@
-const { isEmailValid } = require("../utils/serverUtils");
+const { isEmailValid, isCreditCard } = require("../utils/serverUtils");
 const { admin, db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
 
 const register = async ({ body }) => {
   try {
-    if (!isEmailValid(body.data.email)) {
-      res.status(400).send("email isnt valid");
+    if (
+      !isEmailValid(body.data.email) &&
+      !isCreditCard(body.data.isCreditCard.cardNum)
+    ) {
+      return {
+        status: 400,
+        message: "Email or password is not valid",
+      };
     }
     const userJson = fixTimeStampObject(body.data);
     // TODO: create register api
