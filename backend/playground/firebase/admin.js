@@ -3,8 +3,7 @@ const credentials = require("../../key.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(credentials),
-  databaseURL:
-    "https://smarticket-16464-default-rtdb.europe-west1.firebasedatabase.app",
+  databaseURL: process.env.DB_URL,
 });
 const db = admin.firestore();
 
