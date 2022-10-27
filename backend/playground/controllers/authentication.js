@@ -1,4 +1,7 @@
-const { checkEmailAndCreditCard } = require("../utils/authenticationUtils");
+const {
+  checkEmailAndCreditCard,
+  isEmailExist,
+} = require("../utils/authenticationUtils");
 const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
 const { admin, db } = require("../firebase/admin");
@@ -12,7 +15,7 @@ const register = async ({ data }) => {
         creditCard: data.creditCard.cardNum,
       })
     ) {
-      return { status: 400, response: "email or creditCard isnt valid" };
+      return { status: 400, response: "email or creditCard isn't valid" };
     }
     if (!isEmailExist({ email: data.email })) {
       return {
