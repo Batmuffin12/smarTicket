@@ -23,7 +23,7 @@ const getAllEntities = async ({ collectionName }) => {
     const response = await dataRef.get();
     let responseArr = [];
     response.forEach((doc) => {
-      responseArr.push(doc.data());
+      responseArr.push({ id: doc.id, data: doc.data() });
     });
     return {
       status: 200,

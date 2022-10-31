@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./backend/playground/app.js",
-    "test": "nodemon ./backend/src/app.js"
+    "test": "nodemon ./backend/src/app.js",
+    "tries": "nodemon ./backend/playground/smth.js"
   },
   "keywords": [],
   "author": "",
