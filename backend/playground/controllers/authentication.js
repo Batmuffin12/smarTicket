@@ -1,10 +1,11 @@
 const {
   checkEmailAndCreditCard,
   isEmailExist,
+  generateAuthToken,
 } = require("../utils/authenticationUtils");
 const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
-const { admin, db } = require("../firebase/admin");
+const { db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
 
 const register = async ({ data }) => {
@@ -23,9 +24,15 @@ const register = async ({ data }) => {
         message: "Email already exists",
       };
     }
-    body.data.password = await bcrypt.hash(data.password, 10);
+    if (!isPasswordMValid({ password: data.password })) {
+      return {
+        status: 406,
+        message: "password invalid, password length must be 6 or more!",
+      };
+    }
+    data.password = await bcrypt.hash(data.password, 10);
+    data.token = generateAuthToken({ email: data.email });
     const userJson = fixTimeStampObject(data);
-    // TODO: create register api - JSON tokens
     const response = db.collection("Users").add(userJson);
     return {
       status: 201,
@@ -39,17 +46,31 @@ const register = async ({ data }) => {
   }
 };
 
-const logIn = async ({ data }) => {
+const login = async ({ data, user }) => {
   try {
-    // TODO: create log in api - create JSON tokens
+    if (user) {
+      return {
+        status: 200,
+        response: user,
+      };
+    }
     const userArr = await getAllEntities({ collectionName: "Users" });
-    userArr.filter(async (user) => {
-      const isPassValid = await bcrypt.compare(data.password, user.password);
-      return user.email === data.email && isPassValid;
+    const dataUser = userArr.find(async (user) => {
+      const isPasswordMatch = await bcrypt.compare(
+        data.password,
+        user.password
+      );
+      return user.email === data.email && isPasswordMatch;
     });
+    if (!dataUser) {
+      return {
+        status: 400,
+        response: "email or password isnt right!",
+      };
+    }
     return {
       status: 200,
-      response: "log in success!",
+      response: dataUser,
     };
   } catch (e) {
     return {
@@ -61,5 +82,5 @@ const logIn = async ({ data }) => {
 
 module.exports = {
   register,
-  logIn,
+  login,
 };
