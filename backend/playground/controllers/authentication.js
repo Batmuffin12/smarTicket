@@ -1,4 +1,5 @@
 const {
+  isPasswordValid,
   checkEmailAndCreditCard,
   isEmailExist,
   generateAuthToken,
@@ -13,30 +14,30 @@ const register = async ({ data }) => {
     if (
       !checkEmailAndCreditCard({
         email: data.email,
-        creditCard: data.creditCard.cardNum,
+        cardNum: data.creditCard.cardNum,
       })
     ) {
       return { status: 400, response: "email or creditCard isn't valid" };
     }
-    if (!isEmailExist({ email: data.email })) {
+    if (!isPasswordValid({ password: data.password })) {
       return {
         status: 406,
-        message: "Email already exists",
+        response: "password invalid, password length must be 6 or more!",
       };
     }
-    if (!isPasswordMValid({ password: data.password })) {
+    if (await isEmailExist({ email: data.email })) {
       return {
         status: 406,
-        message: "password invalid, password length must be 6 or more!",
+        response: "Email already exists",
       };
     }
     data.password = await bcrypt.hash(data.password, 10);
-    data.token = generateAuthToken({ email: data.email });
+    data.token = await generateAuthToken({ email: data.email });
     const userJson = fixTimeStampObject(data);
-    const response = db.collection("Users").add(userJson);
+    await db.collection("Users").add(userJson);
     return {
       status: 201,
-      response,
+      response: userJson.token,
     };
   } catch (e) {
     return {

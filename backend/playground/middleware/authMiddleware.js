@@ -6,7 +6,7 @@ const auth = async (req, res, next) => {
     const token = req.header("Authorization").replace("Bearer ", "");
     const decoded = jwt.verify(token, process.env.JSON_TOKEN);
     const userArr = await getAllEntities({ collectionName });
-    const user = userArr.find((user) => user.email === decoded.email);
+    const user = userArr.find((user) => user.data.email === decoded.email);
     if (!user.empty) {
       req.body.user = user.data();
     }
