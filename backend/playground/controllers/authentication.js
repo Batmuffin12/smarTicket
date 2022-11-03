@@ -37,7 +37,10 @@ const register = async ({ data }) => {
     await db.collection("Users").add(userJson);
     return {
       status: 201,
-      response: userJson.token,
+      response: {
+        token: userJson.token,
+        message: "user Created successfully",
+      },
     };
   } catch (e) {
     return {
