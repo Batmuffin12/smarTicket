@@ -1,18 +1,23 @@
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
 const { getAllEntities } = require("../controllers/generic");
 
 const auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
     const decoded = jwt.verify(token, process.env.JSON_TOKEN);
-    const userArr = await getAllEntities({ collectionName });
-    const user = userArr.find((user) => user.data.email === decoded.email);
-    if (!user.empty) {
-      req.body.user = user.data();
+    const { response } = await getAllEntities({ collectionName: "Users" });
+    const validUser = response.find(
+      (user) => user.data.email === decoded.email
+    );
+    if (!validUser.empty) {
+      req.body.validUser = validUser.data;
     }
+    console.log("test");
     next();
   } catch (e) {
-    res.status(401).send("Please authenticate");
+    next();
+    // res.status(401).send("Please authenticate");
   }
 };
 

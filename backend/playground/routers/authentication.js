@@ -3,10 +3,10 @@ const router = express.Router();
 const { login, register } = require("../controllers/authentication");
 const { auth } = require("../middleware/authMiddleware");
 
-router.get("/login", auth, async ({ body }, res) => {
+router.post("/login", auth, async ({ body }, res) => {
   const { response, status } = await login({
     data: body.data,
-    user: body.user,
+    validUser: body.validUser,
   });
   res.status(status).send(response);
 });

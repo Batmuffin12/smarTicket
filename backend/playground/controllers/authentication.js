@@ -8,6 +8,7 @@ const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
 const { db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
+const { connectFirestoreEmulator } = require("firebase/firestore");
 
 const register = async ({ data }) => {
   try {
@@ -50,31 +51,35 @@ const register = async ({ data }) => {
   }
 };
 
-const login = async ({ data, user }) => {
+const login = async ({ data, validUser }) => {
   try {
-    if (user) {
+    if (validUser) {
       return {
         status: 200,
-        response: user,
+        response: validUser,
       };
     }
-    const userArr = await getAllEntities({ collectionName: "Users" });
-    const dataUser = userArr.find(async (user) => {
-      const isPasswordMatch = await bcrypt.compare(
-        data.password,
-        user.password
-      );
-      return user.email === data.email && isPasswordMatch;
+    //FIX ME: ALWAYS RETURNS THE FIRST ONE IN THE COLLECTION
+    console.log("no user middleware");
+    const { response } = await getAllEntities({ collectionName: "Users" });
+    const dataUser = response.find(async (user) => {
+      console.log(user.data.password);
+      console.log(data.password);
+      const result = await bcrypt.compare(data.password, user.data.password);
+      console.log("pass is valid:", result);
+      console.log("return: ", result && data.email === user.data.email);
+      return result && data.email === user.data.email;
     });
-    if (!dataUser) {
+    console.log(dataUser);
+    if (dataUser) {
       return {
-        status: 400,
-        response: "email or password isnt right!",
+        status: 200,
+        response: dataUser,
       };
     }
     return {
-      status: 200,
-      response: dataUser,
+      status: 400,
+      response: "email or password isnt right!",
     };
   } catch (e) {
     return {

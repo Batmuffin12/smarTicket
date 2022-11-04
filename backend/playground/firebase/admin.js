@@ -1,4 +1,5 @@
 const admin = require("firebase-admin");
+const { query, where } = require("firebase/firestore");
 const credentials = require("../../key.json");
 
 admin.initializeApp({
@@ -10,4 +11,6 @@ const db = admin.firestore();
 module.exports = {
   db,
   admin,
+  query,
+  where,
 };
