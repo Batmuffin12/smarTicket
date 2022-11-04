@@ -62,10 +62,12 @@ const login = async ({ data, validUser }) => {
     //FIX ME: ALWAYS RETURNS THE FIRST ONE IN THE COLLECTION
     console.log("no user middleware");
     const { response } = await getAllEntities({ collectionName: "Users" });
-    const dataUser = response.find(async (user) => {
+    const dataUser = response.find((user) => {
       console.log(user.data.password);
       console.log(data.password);
-      const result = await bcrypt.compare(data.password, user.data.password);
+      const result = bcrypt
+        .compare(data.password, user.data.password)
+        .then((res) => res);
       console.log("pass is valid:", result);
       console.log("return: ", result && data.email === user.data.email);
       return result && data.email === user.data.email;
