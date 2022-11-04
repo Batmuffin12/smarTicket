@@ -13,7 +13,6 @@ const auth = async (req, res, next) => {
     if (!validUser.empty) {
       req.body.validUser = validUser.data;
     }
-    console.log("test");
     next();
   } catch (e) {
     next();
