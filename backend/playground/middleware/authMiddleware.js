@@ -11,7 +11,9 @@ const auth = async (req, res, next) => {
       (user) => user.data.email === decoded.email
     );
     if (!validUser.empty) {
-      req.body.validUser = validUser.data;
+      req.body.validUser = {
+        ...validUser,
+      };
     }
     next();
   } catch (e) {

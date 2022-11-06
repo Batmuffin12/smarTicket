@@ -4,6 +4,7 @@ const {
   isEmailExist,
   generateAuthToken,
 } = require("../utils/authenticationUtils");
+const { sendWelcomeMail } = require("../emails/account");
 const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
 const { db } = require("../firebase/admin");
@@ -36,6 +37,7 @@ const register = async ({ data }) => {
     data.token = await generateAuthToken({ email: data.email });
     const userJson = fixTimeStampObject(data);
     await db.collection("Users").add(userJson);
+    sendWelcomeMail(data.email);
     return {
       status: 201,
       response: {
@@ -56,7 +58,7 @@ const login = async ({ data, validUser }) => {
     if (validUser) {
       return {
         status: 200,
-        response: validUser,
+        response: validUser.data,
       };
     }
     const { response } = await getAllEntities({ collectionName: "Users" });

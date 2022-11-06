@@ -7,6 +7,9 @@ const {
   getSingularEntity,
   getAllEntities,
 } = require("../controllers/generic");
+const { uploadUserImg } = require("../controllers/users");
+const multer = require("multer");
+const { userFaceImg } = require("../middleware/users");
 
 router.post("/users/create", async (req, res) => {
   const { status, response } = await createEntity({
@@ -42,6 +45,20 @@ router.patch("/users/update", async (req, res) => {
   });
   return res.status(status).send(response);
 });
+
+router.post(
+  "/users/changeImg/:id",
+  multer(userFaceImg).single("userFaceImg"),
+  async (req, res) => {
+    // console.log(req.file);
+    const { response, status } = await uploadUserImg({
+      id: req.params.id,
+      file: req.file,
+    });
+    console.log(response);
+    res.status(status).send(response);
+  }
+);
 
 router.delete("/users/:id", async (req, res) => {
   const { status, response } = await deleteEntity({
