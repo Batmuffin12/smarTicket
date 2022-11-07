@@ -50,12 +50,10 @@ router.post(
   "/users/changeImg/:id",
   multer(userFaceImg).single("userFaceImg"),
   async (req, res) => {
-    // console.log(req.file);
     const { response, status } = await uploadUserImg({
       id: req.params.id,
       file: req.file,
     });
-    console.log(response);
     res.status(status).send(response);
   }
 );

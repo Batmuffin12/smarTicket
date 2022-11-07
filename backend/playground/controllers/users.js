@@ -1,9 +1,8 @@
 const sharp = require("sharp");
-const { patchEntity } = require("./generic");
+const { db } = require("../firebase/admin");
 
 const uploadUserImg = async ({ file, id }) => {
   try {
-    //FIX ME: buffer not converting right
     const buffer = await sharp(file.buffer)
       .resize({
         width: 250,
@@ -11,14 +10,10 @@ const uploadUserImg = async ({ file, id }) => {
       })
       .png()
       .toBuffer();
-    console.log(buffer);
-    const response = await patchEntity({
-      id,
-      updates: {
-        image: buffer,
-      },
-      collectionName: "Users",
-    });
+    const response = await db
+      .collection("Users")
+      .doc(id)
+      .update({ image: buffer });
     return {
       status: 200,
       response,
