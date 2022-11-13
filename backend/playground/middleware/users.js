@@ -1,6 +1,6 @@
 const multer = require("multer");
 
-const userFaceImg = multer({
+const imageSettings = multer({
   limits: {
     fileSize: 1000000,
   },
@@ -12,5 +12,5 @@ const userFaceImg = multer({
 });
 
 module.export = {
-  userFaceImg,
+  imageSettings,
 };

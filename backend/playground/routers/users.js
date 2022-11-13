@@ -9,7 +9,7 @@ const {
 } = require("../controllers/generic");
 const { uploadUserImg } = require("../controllers/users");
 const multer = require("multer");
-const { userFaceImg } = require("../middleware/users");
+const { imageSettings } = require("../middleware/users");
 
 router.post("/users/create", async (req, res) => {
   const { status, response } = await createEntity({
@@ -48,7 +48,7 @@ router.patch("/users/update", async (req, res) => {
 
 router.post(
   "/users/changeImg/:id",
-  multer(userFaceImg).single("userFaceImg"),
+  multer(imageSettings).single("userFaceImg"),
   async (req, res) => {
     const { response, status } = await uploadUserImg({
       id: req.params.id,
