@@ -9,7 +9,7 @@ const {
 } = require("../controllers/generic");
 const { uploadUserImg } = require("../controllers/users");
 const multer = require("multer");
-const { imageSettings } = require("../middleware/users");
+const { imageSettings } = require("../middleware/requestImageSettings");
 
 router.post("/users/create", async (req, res) => {
   const { status, response } = await createEntity({
