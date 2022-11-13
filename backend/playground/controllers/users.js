@@ -1,5 +1,8 @@
 const sharp = require("sharp");
 const { db } = require("../firebase/admin");
+const { callToPythonApi } = require("../python/callToApi");
+
+//FIXME: use python file
 
 const uploadUserImg = async ({ file, id }) => {
   try {
@@ -10,6 +13,9 @@ const uploadUserImg = async ({ file, id }) => {
       })
       .png()
       .toBuffer();
+
+    const result = await callToPythonApi("test.py", []);
+    // TODO: finish this
     const response = await db
       .collection("Users")
       .doc(id)
