@@ -9,7 +9,6 @@ const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
 const { db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
-const { connectFirestoreEmulator } = require("firebase/firestore");
 
 const register = async ({ data }) => {
   try {
