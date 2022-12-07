@@ -9,7 +9,6 @@ const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
 const { db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
-const { connectFirestoreEmulator } = require("firebase/firestore");
 
 const register = async ({ data }) => {
   try {
@@ -34,7 +33,7 @@ const register = async ({ data }) => {
       };
     }
     data.password = await bcrypt.hash(data.password, 10);
-    data.token = await generateAuthToken({ email: data.email });
+    data.token =  generateAuthToken({ email: data.email });
     const userJson = fixTimeStampObject(data);
     await db.collection("Users").add(userJson);
     sendWelcomeMail(data.email);
