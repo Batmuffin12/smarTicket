@@ -33,7 +33,7 @@ const register = async ({ data }) => {
       };
     }
     data.password = await bcrypt.hash(data.password, 10);
-    data.token =  generateAuthToken({ email: data.email });
+    data.token = generateAuthToken({ email: data.email });
     const userJson = fixTimeStampObject(data);
     await db.collection("Users").add(userJson);
     sendWelcomeMail(data.email);
@@ -57,7 +57,7 @@ const login = async ({ data, validUser }) => {
     if (validUser) {
       return {
         status: 200,
-        response: validUser.data,
+        response: validUser,
       };
     }
     const { response } = await getAllEntities({ collectionName: "Users" });
