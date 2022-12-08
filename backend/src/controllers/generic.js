@@ -75,6 +75,7 @@ const deleteEntity = async ({ collectionName, id }) => {
   }
 };
 
+//FIXME: to patch timestamps needed
 const patchEntity = async ({ id, updates, collectionName }) => {
   try {
     const fixedUpdateObject = fixTimeStampObject(updates);

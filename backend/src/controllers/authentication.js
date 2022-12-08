@@ -66,7 +66,7 @@ const login = async ({ data, validUser }) => {
         .compare(data.password, user.data.password)
         .then((res) => res);
       return result && data.email === user.data.email;
-    });
+    }); //FIXME: returns true even if password is not matched
     if (dataUser) {
       return {
         status: 200,

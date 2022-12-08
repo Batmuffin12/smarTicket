@@ -18,7 +18,6 @@ const fixTimeStampObject = (object, keys = config.timeStampKeys) => {
       }
     }
   }
-
   return fixedObject;
 };
 

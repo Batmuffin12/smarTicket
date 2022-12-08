@@ -13,6 +13,51 @@ test("should register an user", async () => {
   expect(status).toBe(201);
 });
 
+test("shouldn't let register password is invalid", async () => {
+  const { status } = await request(app)
+    .post("/register")
+    .send({
+      data: {
+        ...userOne,
+        password: "123",
+      },
+    });
+  expect(status).toBe(406);
+});
+
+test("shouldn't let register creditCard is invalid", async () => {
+  const { status } = await request(app)
+    .post("/register")
+    .send({
+      data: {
+        ...userOne,
+        creditCard: {
+          creditNum: "123",
+        },
+      },
+    });
+  expect(status).toBe(400);
+});
+
+test("shouldn't let register email is invalid", async () => {
+  const { status } = await request(app)
+    .post("/register")
+    .send({
+      data: {
+        ...userOne,
+        email: "123",
+      },
+    });
+  expect(status).toBe(400);
+});
+
+test("shouldn't let register because email  already registered", async () => {
+  const { status } = await request(app)
+    .post("/register")
+    .send({ data: userOne });
+  expect(status).toBe(406);
+});
+
 test("should login for the specific user with json token", async () => {
   const { body, status } = await request(app)
     .post("/login")
@@ -36,6 +81,31 @@ test("should login by the email and password", async () => {
   expect(status).toBe(200);
 });
 
+test("shouldn't let login password is not correct", async () => {
+  const response = await request(app)
+    .post("/login")
+    .send({
+      data: {
+        email: userOne.email,
+        password: "123",
+      },
+    });
+  console.log(response);
+  expect(response.status).toBe(400);
+});
+
+test("shouldn't let login email is not correct", async () => {
+  const { status } = await request(app)
+    .post("/login")
+    .send({
+      data: {
+        email: "123",
+        password: userOne.password,
+      },
+    });
+  expect(status).toBe(400);
+});
+
 test("should find an user by id", async () => {
   const { body, status } = await request(app).get(`/users/${userId}`);
   expect(body.email).toEqual(userOne.email);
@@ -50,15 +120,17 @@ test("should get all users", async () => {
   expect(status).toBe(200);
 });
 
-//FIXME: DO NOT PATCH  RIGHT
 test("should patch user's name", async () => {
-  await request(app)
+  const response = await request(app)
     .patch(`/users/update`)
     .send({
       data: {
         id: userId,
         updates: {
           name: "test",
+          creditCard: {
+            cardValid: 1663826657201,
+          },
         },
       },
     });
