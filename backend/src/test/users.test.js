@@ -81,26 +81,26 @@ test("should login by the email and password", async () => {
   expect(status).toBe(200);
 });
 
-test("shouldn't let login password is not correct", async () => {
-  const response = await request(app)
-    .post("/login")
-    .send({
-      data: {
-        email: userOne.email,
-        password: "123",
-      },
-    });
-  console.log(response);
-  expect(response.status).toBe(400);
-});
-
 test("shouldn't let login email is not correct", async () => {
-  const { status } = await request(app)
+  const { body, status } = await request(app)
     .post("/login")
     .send({
       data: {
         email: "123",
         password: userOne.password,
+      },
+    });
+  expect(body.data).not.toEqual(userOne);
+  expect(status).toBe(400);
+});
+
+test("shouldn't let login password is not correct", async () => {
+  const { body, status } = await request(app)
+    .post("/login")
+    .send({
+      data: {
+        email: userOne.email,
+        password: "123",
       },
     });
   expect(status).toBe(400);
@@ -121,7 +121,7 @@ test("should get all users", async () => {
 });
 
 test("should patch user's name", async () => {
-  const response = await request(app)
+  await request(app)
     .patch(`/users/update`)
     .send({
       data: {

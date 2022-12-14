@@ -61,12 +61,15 @@ const login = async ({ data, validUser }) => {
       };
     }
     const { response } = await getAllEntities({ collectionName: "Users" });
-    const dataUser = response.find((user) => {
-      const result = bcrypt
-        .compare(data.password, user.data.password)
-        .then((res) => res);
-      return result && data.email === user.data.email;
-    }); //FIXME: returns true even if password is not matched
+    let dataUser;
+    let result;
+    for (let i = 0; i < response.length; i++) {
+      result = await bcrypt.compare(data.password, response[i].data.password);
+      if (result && data.email === response[i].data.email) {
+        dataUser = response[i];
+        break;
+      }
+    }
     if (dataUser) {
       return {
         status: 200,
@@ -75,7 +78,7 @@ const login = async ({ data, validUser }) => {
     }
     return {
       status: 400,
-      response: "email or password isnt right!",
+      response: "email or password isn't right!",
     };
   } catch (e) {
     return {

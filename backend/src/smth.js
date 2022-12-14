@@ -7,4 +7,9 @@ const date = () => {
 
 console.log(date());
 
+const db = {};
+if (!db) {
+  console.log("hello");
+}
+
 module.exports = date;
