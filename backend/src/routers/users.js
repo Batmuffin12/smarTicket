@@ -7,9 +7,10 @@ const {
   getSingularEntity,
   getAllEntities,
 } = require("../controllers/generic");
-const { uploadUserImg } = require("../controllers/users");
+const { uploadUserImg, findUserByToken } = require("../controllers/users");
 const multer = require("multer");
 const { imageSettings } = require("../middleware/requestImageSettings");
+const { auth } = require("../middleware/authMiddleware");
 
 router.post("/users/create", async (req, res) => {
   const { status, response } = await createEntity({
@@ -43,7 +44,7 @@ router.patch("/users/update", async (req, res) => {
     },
     collectionName: "Users",
   });
-  return res.status(status).send(response);
+  res.status(status).send(response);
 });
 
 router.post(
@@ -63,6 +64,14 @@ router.delete("/users/:id", async (req, res) => {
     id: req.params.id,
     collectionName: "Users",
   });
+  res.status(status).send(response);
+});
+
+router.get("/users/:token", auth, async (req, res) => {
+  const { status, response } = await findUserByToken({
+    validUser: req.body.validUser.data,
+  });
+  console.log(response);
   res.status(status).send(response);
 });
 

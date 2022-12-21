@@ -1,15 +1,12 @@
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 const { getAllEntities } = require("../controllers/generic");
-
+require("dotenv").config();
 const auth = async (req, res, next) => {
   try {
     const token = req.header("Authorization").replace("Bearer ", "");
-    const decoded = jwt.verify(token, process.env.JSON_TOKEN);
+    const { email } = jwt.verify(token, process.env.JSON_TOKEN);
     const { response } = await getAllEntities({ collectionName: "Users" });
-    const validUser = response.find(
-      (user) => user.data.email === decoded.email
-    );
+    const validUser = response.find((user) => user.data.email === email);
     if (!validUser.empty) {
       req.body.validUser = {
         ...validUser,
