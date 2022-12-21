@@ -1,8 +1,25 @@
 const sharp = require("sharp");
 const { db } = require("../firebase/admin");
 const { callToPythonApi } = require("../python/callToApi");
+const jwt = require("jsonwebtoken");
+const { getAllEntities } = require("./generic");
 
 //FIXME: use python file
+
+const findUserByToken = async ({ validUser }) => {
+  console.log(validUser);
+  if (!validUser) {
+    return {
+      response: "no user found",
+      status: 404,
+    };
+  } else {
+    return {
+      response: validUser,
+      status: 200,
+    };
+  }
+};
 
 const uploadUserImg = async ({ file, id }) => {
   try {
@@ -34,4 +51,5 @@ const uploadUserImg = async ({ file, id }) => {
 
 module.exports = {
   uploadUserImg,
+  findUserByToken,
 };

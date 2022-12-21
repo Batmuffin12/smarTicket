@@ -112,6 +112,12 @@ test("should find an user by id", async () => {
   expect(status).toBe(200);
 });
 
+test("should find user by token", async () => {
+  const { body, status } = await request(app).get(`/users/${userToken}`);
+  expect(body.data.email).toEqual(userOne.email);
+  expect(status).toBe(200);
+});
+
 test("should get all users", async () => {
   const { body, status } = await request(app).get("/users/all");
   const check = body.find((user) => user.email === userOne.email);
