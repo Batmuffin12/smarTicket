@@ -6,17 +6,25 @@ const { getAllEntities } = require("./generic");
 
 //FIXME: use python file
 
-const findUserByToken = async ({ validUser }) => {
-  console.log(validUser);
-  if (!validUser) {
+const findUserByToken = async ({ token }) => {
+  try {
+    const { response } = await getAllEntities({ collectionName: "Users" });
+    const validUser = response.find((user) => user.data.token === token);
+    if (!validUser) {
+      return {
+        response: "no user found",
+        status: 404,
+      };
+    } else {
+      return {
+        response: validUser,
+        status: 200,
+      };
+    }
+  } catch (e) {
     return {
-      response: "no user found",
-      status: 404,
-    };
-  } else {
-    return {
-      response: validUser,
-      status: 200,
+      status: 500,
+      response: e,
     };
   }
 };

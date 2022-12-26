@@ -10,7 +10,6 @@ const {
 const { uploadUserImg, findUserByToken } = require("../controllers/users");
 const multer = require("multer");
 const { imageSettings } = require("../middleware/requestImageSettings");
-const { auth } = require("../middleware/authMiddleware");
 
 router.post("/users/create", async (req, res) => {
   const { status, response } = await createEntity({
@@ -67,11 +66,10 @@ router.delete("/users/:id", async (req, res) => {
   res.status(status).send(response);
 });
 
-router.get("/users/:token", auth, async (req, res) => {
+router.get("/users/getUser/:token", async (req, res) => {
   const { status, response } = await findUserByToken({
-    validUser: req.body.validUser.data,
+    token: req.params.token,
   });
-  console.log(response);
   res.status(status).send(response);
 });
 
