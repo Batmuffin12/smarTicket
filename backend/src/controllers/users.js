@@ -1,8 +1,8 @@
-const sharp = require("sharp");
 const { db } = require("../firebase/admin");
 const { callToPythonApi } = require("../python/callToApi");
 const jwt = require("jsonwebtoken");
 const { getAllEntities } = require("./generic");
+const { fixImg } = require("../utils/imageMethods");
 
 //FIXME: use python file
 
@@ -31,14 +31,7 @@ const findUserByToken = async ({ token }) => {
 
 const uploadUserImg = async ({ file, id }) => {
   try {
-    const buffer = await sharp(file.buffer)
-      .resize({
-        width: 250,
-        height: 250,
-      })
-      .png()
-      .toBuffer();
-
+    const buffer = fixImg(file.buffer);
     const result = await callToPythonApi("test.py", []);
     // TODO: finish this
     const response = await db

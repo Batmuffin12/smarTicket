@@ -7,6 +7,9 @@ const {
   getSingularEntity,
   getAllEntities,
 } = require("../controllers/generic");
+const { buyTicket } = require("../controllers/tickets");
+const multer = require("multer");
+const { imageSettings } = require("../middleware/requestImageSettings");
 
 router.get("/tickets/all", async (req, res) => {
   const { status, response } = await getAllEntities({
@@ -49,5 +52,18 @@ router.delete("/tickets/:id", async (req, res) => {
   });
   res.status(status).send(response);
 });
+
+router.post(
+  "/tickets/buyTicket",
+  multer(imageSettings).single("userFaceImg"),
+  async (req, res) => {
+    const { status, response } = await buyTicket({
+      user: req.body.user,
+      train: req.body.train,
+      file: req.file,
+    });
+    res.status(status).send(response);
+  }
+);
 
 module.exports = router;
