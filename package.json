@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./backend/src/app.js",
-    "test": "jest --watch",
+    "test": "jest --watch --maxConcurrencyOption=1",
     "tries": "nodemon ./backend/src/smth.js"
   },
   "keywords": [],

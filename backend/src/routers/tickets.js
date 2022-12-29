@@ -58,7 +58,7 @@ router.post(
   multer(imageSettings).single("userFaceImg"),
   async (req, res) => {
     const { status, response } = await buyTicket({
-      user: req.body.user,
+      user: req.validUser,
       train: req.body.train,
       file: req.file,
     });

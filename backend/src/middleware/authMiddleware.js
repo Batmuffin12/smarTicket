@@ -8,7 +8,7 @@ const auth = async (req, res, next) => {
     const { response } = await getAllEntities({ collectionName: "Users" });
     const validUser = response.find((user) => user.data.email === email);
     if (!validUser.empty) {
-      req.body.validUser = {
+      req.validUser = {
         ...validUser,
       };
     }
