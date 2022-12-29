@@ -1,6 +1,6 @@
 const sharp = require("sharp");
 
-const fixImg = async (buffer) => {
+const fixImg = async ({ buffer }) => {
   const fixedImg = await sharp(buffer)
     .resize({
       width: 250,
