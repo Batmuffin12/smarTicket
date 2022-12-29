@@ -6,9 +6,12 @@ const fixTimeStampObject = (object, keys = config.timeStampKeys) => {
   for (const key of keys) {
     if (key.includes(".")) {
       const [firstKey, ...restKeys] = key.split(".");
-      fixedObject[firstKey] = fixTimeStampObject(object[firstKey], restKeys);
+      if (object[firstKey]) {
+        fixedObject[firstKey] = fixTimeStampObject(object[firstKey], restKeys);
+      }
     } else {
       if (
+        object &&
         object[key] &&
         (typeof object[key] === "string" || typeof object[key] === "number")
       ) {

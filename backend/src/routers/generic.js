@@ -8,44 +8,44 @@ const {
   getAllEntities,
 } = require("../controllers/generic");
 
-router.get("/trains/all", async (req, res) => {
+router.get("/:model/all", async (req, res) => {
   const { status, response } = await getAllEntities({
-    collectionName: "Trains",
+    collectionName: req.params.model,
   });
   res.status(status).send(response);
 });
 
-router.get("/trains/:id", async (req, res) => {
+router.get("/:model/:id", async (req, res) => {
   const { status, response } = await getSingularEntity({
     id: req.params.id,
-    collectionName: "Trains",
+    collectionName: req.params.model,
   });
   res.status(status).send(response);
 });
 
-router.post("/trains/create", async (req, res) => {
+router.post("/:model/create", async (req, res) => {
   const { status, response } = await createEntity({
     data: req.body.data,
-    collectionName: "Trains",
+    collectionName: req.params.model,
   });
   res.status(status).send(response);
 });
 
-router.patch("/trains/update", async (req, res) => {
+router.patch("/:model/update", async (req, res) => {
   const { status, response } = await patchEntity({
     id: req.body.data.id,
     updates: {
       ...req.body.data.updates,
     },
-    collectionName: "Trains",
+    collectionName: req.params.model,
   });
   res.status(status).send(response);
 });
 
-router.delete("/trains/:id", async (req, res) => {
+router.delete("/:model/:id", async (req, res) => {
   const { status, response } = await deleteEntity({
     id: require.params.id,
-    collectionName: "Trains",
+    collectionName: req.params.model,
   });
   res.status(status).send(response);
 });

@@ -1,4 +1,4 @@
-const { admin, db } = require("../firebase/admin");
+const { db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
 
 const createEntity = async ({ data, collectionName }) => {
@@ -12,7 +12,7 @@ const createEntity = async ({ data, collectionName }) => {
   } catch (e) {
     return {
       status: 500,
-      response: e,
+      response: e.message || e,
     };
   }
 };
@@ -32,7 +32,7 @@ const getAllEntities = async ({ collectionName }) => {
   } catch (e) {
     return {
       status: 500,
-      response: e,
+      response: e.message || e,
     };
   }
 };
@@ -55,7 +55,7 @@ const getSingularEntity = async ({ id, collectionName }) => {
   } catch (e) {
     return {
       status: 500,
-      response: e,
+      response: e.message || e,
     };
   }
 };
@@ -70,12 +70,12 @@ const deleteEntity = async ({ collectionName, id }) => {
   } catch (e) {
     return {
       status: 500,
-      response: e,
+      response: e.message || e,
     };
   }
 };
 
-//FIXME: to patch timestamps needed
+// FIXME: to patch timestamps needed
 const patchEntity = async ({ id, updates, collectionName }) => {
   try {
     const fixedUpdateObject = fixTimeStampObject(updates);
@@ -97,7 +97,7 @@ const patchEntity = async ({ id, updates, collectionName }) => {
   } catch (e) {
     return {
       status: 500,
-      response: e,
+      response: e.message || e,
     };
   }
 };
