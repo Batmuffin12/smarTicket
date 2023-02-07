@@ -64,6 +64,7 @@ test("should login for the specific user with json token", async () => {
     .set("Authorization", userToken)
     .send();
   userId = body.id;
+  console.log(body, status);
   expect(body.data.email).toEqual(userOne.email);
   expect(status).toBe(200);
 });
@@ -114,7 +115,7 @@ test("should find an user by id", async () => {
 
 test("should find user by token", async () => {
   const { body, status } = await request(app).get(
-    `/users/getUser/${userToken}`
+    `/Users/getUser/${userToken}`
   );
   expect(body.data.email).toEqual(userOne.email);
   expect(status).toBe(200);

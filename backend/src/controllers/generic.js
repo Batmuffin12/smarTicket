@@ -4,11 +4,11 @@ const fixTimeStampObject = require("../utils/fixTimeStampObject");
 const createEntity = async ({ data, collectionName }) => {
   try {
     const fixedData = fixTimeStampObject(data);
-    const response = db.collection(collectionName).add(fixedData);
-    return {
-      status: 201,
-      response,
-    };
+    const response = await db.collection(collectionName).add(fixedData);
+    return getSingularEntity({
+      id: response._path.segments[1],
+      collectionName,
+    });
   } catch (e) {
     return {
       status: 500,
@@ -44,7 +44,10 @@ const getSingularEntity = async ({ id, collectionName }) => {
     if (response.data()) {
       return {
         status: 200,
-        response: response.data(),
+        response: {
+          id,
+          data: response.data(),
+        },
       };
     } else {
       return {
@@ -62,10 +65,11 @@ const getSingularEntity = async ({ id, collectionName }) => {
 
 const deleteEntity = async ({ collectionName, id }) => {
   try {
+    console.log(id, collectionName);
     const response = await db.collection(collectionName).doc(id).delete();
     return {
       status: 200,
-      response: response,
+      response: id,
     };
   } catch (e) {
     return {
@@ -75,7 +79,25 @@ const deleteEntity = async ({ collectionName, id }) => {
   }
 };
 
-// FIXME: to patch timestamps needed
+const deleteManyEntities = async ({ collectionName, entities }) => {
+  try {
+    const batch = db.batch();
+    entities.forEach((entity) =>
+      batch.delete(db.collection(collectionName).doc(entity))
+    );
+    const response = await batch.commit();
+    return {
+      status: 200,
+      response: entities,
+    };
+  } catch (e) {
+    return {
+      status: 500,
+      response: e.message || e,
+    };
+  }
+};
+
 const patchEntity = async ({ id, updates, collectionName }) => {
   try {
     const fixedUpdateObject = fixTimeStampObject(updates);
@@ -84,10 +106,7 @@ const patchEntity = async ({ id, updates, collectionName }) => {
       .doc(id)
       .update(fixedUpdateObject);
     if (response) {
-      return {
-        status: 200,
-        response,
-      };
+      return getSingularEntity({ id, collectionName });
     } else {
       return {
         status: 400,
@@ -108,4 +127,5 @@ module.exports = {
   getSingularEntity,
   deleteEntity,
   patchEntity,
+  deleteManyEntities,
 };

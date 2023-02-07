@@ -9,6 +9,7 @@ const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
 const { db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
+const { findUserByToken } = require("./users");
 
 const register = async ({ data }) => {
   try {
@@ -37,13 +38,7 @@ const register = async ({ data }) => {
     const userJson = fixTimeStampObject(data);
     await db.collection("Users").add(userJson);
     sendWelcomeMail(data.email);
-    return {
-      status: 201,
-      response: {
-        token: userJson.token,
-        message: "user Created successfully",
-      },
-    };
+    return findUserByToken({ token: data.token });
   } catch (e) {
     return {
       status: 500,

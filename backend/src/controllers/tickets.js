@@ -4,38 +4,38 @@ const { createEntity, getSingularEntity } = require("./generic");
 const { fixImg } = require("../utils/imageMethods");
 
 // TODO: send all of body in raw form, and not "form-data"
-const buyTicket = async ({ user, tripId, file = null }) => {
+const buyTicket = async ({ user, tripId }) => {
   try {
-    let fixedFile;
-    if (file) {
-      fixedFile = await fixImg(file);
-    } else {
-      fixedFile = await fixImg(user.data.image);
-    }
+    // let fixedFile;
+    // if (file) {
+    //   fixedFile = await fixImg(file);
+    // } else {
+    //   fixedFile = await fixImg(user.data.image);
+    // }
     if (payment({ creditCard: user.data.creditCard })) {
-      if (fixedFile) {
-        const currentTrip = await getSingularEntity({
-          id: tripId,
-          collectionName: "Trips",
-        });
-        const { response, status } = await createEntity({
-          data: {
-            tempImg: fixedFile,
-            userId: user.id,
-            tripId: tripId,
-            validUntil: currentTrip.response,
-          },
-          collectionName: "Tickets",
-        });
-        return {
-          response,
-          status,
-        };
-      }
+      // if (fixedFile) {
+      const currentTrip = await getSingularEntity({
+        id: tripId,
+        collectionName: "Trips",
+      });
+      const { response, status } = await createEntity({
+        data: {
+          // tempImg: fixedFile,
+          userId: user.id,
+          tripId: tripId,
+          validUntil: currentTrip.response, // TODO: fix this
+        },
+        collectionName: "Tickets",
+      });
       return {
-        response: "no file",
-        status: 400,
+        response,
+        status,
       };
+      // }
+      // return {
+      //   response: "no file",
+      //   status: 400,
+      // };
     }
     return {
       response: "payment not ok",
