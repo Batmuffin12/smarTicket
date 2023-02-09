@@ -29,6 +29,7 @@ const findUserByToken = async ({ token }) => {
   }
 };
 
+// TODO: add station id and isEntryOrExit in params and add 1 to counter of that station by isEntryOrExit
 const uploadUserImg = async ({ file, id }) => {
   try {
     const buffer = fixImg(file.buffer);
