@@ -1,32 +1,32 @@
 const {
-  isPasswordValid,
-  checkEmailAndCreditCard,
   isEmailExist,
   generateAuthToken,
+  uploadFile,
 } = require("../utils/authenticationUtils");
 const { sendWelcomeMail } = require("../emails/account");
 const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
-const { db } = require("../firebase/admin");
+const { db, storageRef, ref, bucket } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
 const { findUserByToken } = require("./users");
 
-const register = async ({ data }) => {
+const register = async ({ data, imgType }) => {
   try {
-    if (
-      !checkEmailAndCreditCard({
-        email: data.email,
-        cardNum: data.creditCard.cardNum,
-      })
-    ) {
-      return { status: 400, response: "email or creditCard isn't valid" };
-    }
-    if (!isPasswordValid({ password: data.password })) {
-      return {
-        status: 406,
-        response: "password invalid, password length must be 6 or more!",
-      };
-    }
+    // if (
+    //   !checkEmailAndCreditCard({
+    //     email: data.email,
+    //     cardNum: data.creditCard.cardNum,
+    //   })
+    // ) {
+    //   console.log("email not good");
+    //   return { status: 400, response: "email or creditCard isn't valid" };
+    // }
+    // if (!isPasswordValid({ password: data.password })) {
+    //   return {
+    //     status: 406,
+    //     response: "password invalid, password length must be 6 or more!",
+    //   };
+    // }
     if (await isEmailExist({ email: data.email })) {
       return {
         status: 406,
@@ -35,8 +35,18 @@ const register = async ({ data }) => {
     }
     data.password = await bcrypt.hash(data.password, 10);
     data.token = generateAuthToken({ email: data.email });
+    data.img = data.img.split(",")[1];
+    const filePath = await uploadFile(data, imgType);
+    if (!filePath) {
+      return {
+        status: 500,
+        response: "file didn't upload successfully pls try again",
+      };
+    }
+    data.img = filePath;
     const userJson = fixTimeStampObject(data);
-    await db.collection("Users").add(userJson);
+    db.collection("Users").add(userJson);
+    console.log("after adding user");
     sendWelcomeMail(data.email);
     return findUserByToken({ token: data.token });
   } catch (e) {

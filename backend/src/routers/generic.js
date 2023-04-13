@@ -30,7 +30,6 @@ router.get("/:model/:id*?", async (req, res) => {
 });
 
 router.post("/:model/create", async (req, res) => {
-  console.log(req.body);
   const { status, response } = await createEntity({
     data: req.body.data,
     collectionName: req.params.model,

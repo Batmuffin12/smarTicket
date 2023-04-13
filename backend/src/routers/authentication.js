@@ -12,8 +12,12 @@ router.post("/login", auth, async ({ body, validUser }, res) => {
 });
 
 router.post("/register", async (req, res) => {
-  delete req.body.confirmPassword;
-  const { response, status } = await register({ data: { ...req.body } });
+  const { imgType } = req.body;
+  delete req.body.imgType;
+  const { response, status } = await register({
+    data: { ...req.body },
+    imgType,
+  });
   res.status(status).send(response);
 });
 
