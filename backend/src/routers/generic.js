@@ -8,6 +8,7 @@ const {
   getAllEntities,
   deleteManyEntities,
 } = require("../controllers/generic");
+const { sendContactUsEmail } = require("../emails/account");
 
 router.get("/:model/:id*?", async (req, res) => {
   let status, response;
@@ -34,6 +35,11 @@ router.post("/:model/create", async (req, res) => {
     data: req.body.data,
     collectionName: req.params.model,
   });
+  res.status(status).send(response);
+});
+
+router.post("/contactUs/send", async (req, res) => {
+  const { status, response } = await sendContactUsEmail(req.body);
   res.status(status).send(response);
 });
 
