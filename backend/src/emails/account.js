@@ -12,6 +12,27 @@ const sendWelcomeMail = (email) => {
   });
 };
 
+const sendContactUsEmail = async ({ email, subject, name }) => {
+  try {
+    await sgMail.send({
+      to: rootEmail,
+      from: rootEmail,
+      subject: `from ${email}: name: ${name}`,
+      text: subject,
+    });
+    return {
+      result: "mail delivered successfully",
+      status: 200,
+    };
+  } catch (e) {
+    return {
+      response: e || e.message,
+      status: 500,
+    };
+  }
+};
+
 module.exports = {
   sendWelcomeMail,
+  sendContactUsEmail,
 };
