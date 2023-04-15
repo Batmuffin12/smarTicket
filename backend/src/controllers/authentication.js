@@ -12,21 +12,6 @@ const { findUserByToken } = require("./users");
 
 const register = async ({ data, imgType }) => {
   try {
-    // if (
-    //   !checkEmailAndCreditCard({
-    //     email: data.email,
-    //     cardNum: data.creditCard.cardNum,
-    //   })
-    // ) {
-    //   console.log("email not good");
-    //   return { status: 400, response: "email or creditCard isn't valid" };
-    // }
-    // if (!isPasswordValid({ password: data.password })) {
-    //   return {
-    //     status: 406,
-    //     response: "password invalid, password length must be 6 or more!",
-    //   };
-    // }
     if (await isEmailExist({ email: data.email })) {
       return {
         status: 406,
