@@ -6,7 +6,7 @@ const {
 const { sendWelcomeMail } = require("../emails/account");
 const bcrypt = require("bcrypt");
 const { getAllEntities } = require("./generic");
-const { db, storageRef, ref, bucket } = require("../firebase/admin");
+const { db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
 const { findUserByToken } = require("./users");
 
@@ -31,7 +31,6 @@ const register = async ({ data, imgType }) => {
     data.img = filePath;
     const userJson = fixTimeStampObject(data);
     db.collection("Users").add(userJson);
-    console.log("after adding user");
     sendWelcomeMail(data.email);
     return findUserByToken({ token: data.token });
   } catch (e) {

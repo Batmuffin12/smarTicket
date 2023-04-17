@@ -65,7 +65,6 @@ const getSingularEntity = async ({ id, collectionName }) => {
 
 const deleteEntity = async ({ collectionName, id }) => {
   try {
-    console.log(id, collectionName);
     const response = await db.collection(collectionName).doc(id).delete();
     return {
       status: 200,

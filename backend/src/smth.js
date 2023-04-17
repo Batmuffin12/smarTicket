@@ -5,11 +5,8 @@ const date = () => {
   return Date.now();
 };
 
-console.log(date());
-
-const db = {};
-if (!db) {
-  console.log("hello");
-}
+const x = "abc123";
+const y = async () => console.log(await bcrypt.hash(x, 10));
+y();
 
 module.exports = date;
