@@ -7,6 +7,7 @@ const callToPythonApi = (fileName, params) => {
     return new Promise((res, rej) => {
       python.stdout.on("data", (data) => {
         const result = Buffer.from(data);
+        console.log(result);
         res(result.toString());
       });
       python.stderr.on("data", (data) => {

@@ -33,8 +33,7 @@ const findUserByToken = async ({ token }) => {
 const uploadUserImg = async ({ file, id }) => {
   try {
     const buffer = fixImg(file.buffer);
-    const result = await callToPythonApi("test.py", []);
-    // TODO: finish this
+    const result = await callToPythonApi("test.py", [buffer]);
     const response = await db
       .collection("Users")
       .doc(id)
