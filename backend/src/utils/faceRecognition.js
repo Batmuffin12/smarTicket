@@ -1,6 +1,7 @@
+const { model } = require("@tensorflow/tfjs-node");
 const { Canvas, Image, ImageData } = require("canvas");
 
-export const base64ToCanvas = (base64) => {
+const base64ToCanvas = (base64) => {
   const image = new Image();
   image.src = base64;
 
@@ -10,3 +11,5 @@ export const base64ToCanvas = (base64) => {
 
   return canvas;
 };
+
+module.exports = base64ToCanvas;

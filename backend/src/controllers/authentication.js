@@ -9,6 +9,7 @@ const { getAllEntities } = require("./generic");
 const { db } = require("../firebase/admin");
 const fixTimeStampObject = require("../utils/fixTimeStampObject");
 const { findUserByToken } = require("./users");
+const { detectLandmarks } = require("../face_recognition/landmark_detection");
 
 const register = async ({ data, imgType }) => {
   try {
@@ -20,6 +21,7 @@ const register = async ({ data, imgType }) => {
     }
     data.password = await bcrypt.hash(data.password, 10);
     data.token = generateAuthToken({ email: data.email });
+    console.log(await detectLandmarks(data.img));
     data.img = data.img.split(",")[1];
     const filePath = await uploadFile(data, imgType);
     if (!filePath) {
