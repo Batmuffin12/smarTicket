@@ -3,7 +3,6 @@ const { payment } = require("../utils/paymentMethods");
 const { createEntity, getSingularEntity } = require("./generic");
 const { fixImg } = require("../utils/imageMethods");
 
-// TODO: send all of body in raw form, and not "form-data"
 const buyTicket = async ({ user, tripId }) => {
   try {
     if (payment({ creditCard: user.data.creditCard })) {
