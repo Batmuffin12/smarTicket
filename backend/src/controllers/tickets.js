@@ -6,6 +6,7 @@ const { fixImg } = require("../utils/imageMethods");
 const buyTicket = async ({ user, tripId }) => {
   try {
     if (payment({ creditCard: user.data.creditCard })) {
+      console.log("payment method worked");
       if (user.data.img) {
         const { response: currentTripResponse, status: currentTripStatus } =
           await getSingularEntity({
